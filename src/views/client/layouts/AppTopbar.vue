@@ -1,7 +1,7 @@
 <template>
     <div :class="{ '!bg-primary': isScrolled }" class="h-32 w-full drop-shadow-md bg-white flex flex-col gap-1 z-50 sticky top-0">
         <div class="mx-auto h-full container w-full items-center flex justify-between gap-3">
-            <img width="200" src="../../../assets/img/logo.avif" alt="" />
+            <img width="200" src="../../../assets/img/3.png" alt="" />
             <div class="w-[500px]">
                 <AutoComplete
                     input-id="cc"
@@ -59,12 +59,12 @@
     </div>
 </template>
 <script setup>
+import API from '@/api/api-main';
+import { formatPrice } from '@/helper/formatPrice';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Carts from '../components/Carts.vue';
 import LoginModal from '../components/LoginModal.vue';
-import { ref, onMounted } from 'vue';
-import API from '@/api/api-main';
-import { formatPrice } from '@/helper/formatPrice';
 const router = useRouter();
 onMounted(() => {
     window.addEventListener('scroll', handleScroll);
@@ -84,7 +84,7 @@ const search = async () => {
     }
 };
 </script>
-<style >
+<style>
 .hover-underline-animation {
     display: inline-block;
     position: relative;

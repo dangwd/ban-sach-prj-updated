@@ -17,12 +17,12 @@
 </template>
 <script setup>
 import apiMain from '@/api/api-main';
-import { onMounted, ref } from 'vue';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { onMounted, ref } from 'vue';
 const images = ref([]);
 
 onMounted(() => {
@@ -39,9 +39,8 @@ const fetchBanners = async () => {
 </script>
 <style>
 .mySwiper {
-    width: 90%;
+    width: 100%;
     height: 100%;
-    border-radius: 25px;
 }
 .slide-image {
     width: 100%;
