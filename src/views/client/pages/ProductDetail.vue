@@ -30,30 +30,42 @@
                             <div class="col-span-6">
                                 <div class="flex flex-col gap-2">
                                     <div class="flex gap-2">
-                                        <span>Mã sản phẩm: </span>
-                                        <strong>{{ detail._id }}</strong>
+                                        <span>Mã sách: </span>
+                                        <strong>5242218710002</strong>
                                     </div>
                                     <div class="flex gap-2">
-                                        <span>Xuất xứ: </span>
-                                        <strong> Trung Quốc </strong>
+                                        <span>ISBN: </span>
+                                        <strong>123123</strong>
                                     </div>
                                     <div class="flex gap-2">
-                                        <span>Tuổi: </span>
-                                        <strong>{{ detail.age }}</strong>
+                                        <span>Tác giả: </span>
+                                        <strong>Fujiko F Fujio, Mugiwara Shintaro</strong>
                                     </div>
                                     <div class="flex gap-2">
-                                        <span>Thương hiệu: </span>
-                                        <strong>{{ detail.brand }}</strong>
+                                        <span>Đối tượng: </span>
+                                        <strong>Nhi đồng (6 – 11)</strong>
                                     </div>
                                     <div class="flex gap-2">
-                                        <span>Giới tính: </span>
-                                        <strong>{{ detail.sex }}</strong>
+                                        <span>Khuôn Khổ: </span>
+                                        <strong>13x18 cm</strong>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <span>Số trang: </span>
+                                        <strong>384</strong>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <span>Định dạng: </span>
+                                        <strong>bìa mềm </strong>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <span>Trọng lượng: </span>
+                                        <strong>345 gram </strong>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-span-6">
                                 <div class="flex flex-col gap-2">
-                                    <InputNumber v-model="quantity" :min="1" :max="detail.quantity" inputId="horizontal-buttons" showButtons buttonLayout="horizontal" fluid>
+                                    <InputNumber inputId="horizontal-buttons" showButtons buttonLayout="horizontal" fluid>
                                         <template #incrementbuttonicon>
                                             <span class="pi pi-plus" />
                                         </template>
@@ -61,14 +73,15 @@
                                             <span class="pi pi-minus" />
                                         </template>
                                     </InputNumber>
-                                    <Button @click="addToCart()" icon="pi pi-shopping-cart" severity="info" label="Thêm vào giỏ hàng"></Button>
-                                    <Button @click="buyNow()" icon="pi pi-verified" label="Mua ngay"></Button>
+                                    <Button icon="pi pi-shopping-cart" severity="info" label="Thêm vào giỏ hàng"></Button>
+                                    <Button icon="pi pi-verified" label="Mua ngay"></Button>
                                 </div>
                             </div>
                         </div>
                         <Fieldset legend="Mô tả">
                             <p class="m-0 text-base">
-                                {{ detail.descriptions }}
+                                Tuyển tập thứ hai những trận đấu nổi bật với các cú ném ma thuật và đòn đánh “sát thủ”! Nối tiếp tiếng vang của tuyển tập thứ nhất, tuyển tập thứ hai tiếp tục điểm lại các trận đấu nổi bật xoay quanh vô số kĩ thuật
+                                “sát thủ” do tác giả tự tay chọn lọc! Ngoài ra còn bao gồm 2 truyện ngắn “Doragolf”! Đây sẽ là tuyển tập mà cả các Fan của Doraemon Bóng chày lẫn Fan của chú mèo ú Doraemon rất mong chờ!
                             </p>
                         </Fieldset>
                     </div>
@@ -79,11 +92,11 @@
 </template>
 <script setup>
 import API from '@/api/api-main';
+import { formatPrice } from '@/helper/formatPrice';
+import { useToast } from 'primevue/usetoast';
+import { getCurrentInstance, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCartStore } from '../store/carts';
-import { useToast } from 'primevue/usetoast';
-import { formatPrice } from '@/helper/formatPrice';
-import { getCurrentInstance, onMounted, ref } from 'vue';
 const { proxy } = getCurrentInstance();
 const toast = useToast();
 const home = ref({
