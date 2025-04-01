@@ -1,6 +1,6 @@
 <script setup>
-import AppTopbar from './AppTopbar.vue';
 import AppFooter from './AppFooter.vue';
+import AppTopbar from './AppTopbar.vue';
 </script>
 <template>
     <Toast />

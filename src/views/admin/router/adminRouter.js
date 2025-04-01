@@ -43,6 +43,11 @@ export default [
                 path: '/man/banners',
                 name: 'banners',
                 component: () => import('@/views/admin/pages/BannerMan.vue')
+            },
+            {
+                path: '/man/authors',
+                name: 'authors',
+                component: () => import('@/views/admin/pages/AuthorsMan.vue')
             }
         ]
     },

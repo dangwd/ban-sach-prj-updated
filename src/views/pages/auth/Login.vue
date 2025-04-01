@@ -23,6 +23,7 @@ const handleLogin = async () => {
     if (res.status === 1) {
         router.push({ name: 'home' });
     } else {
+        console.log(res);
         proxy.$notify('E', res, toast);
     }
 };

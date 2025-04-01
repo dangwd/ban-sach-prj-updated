@@ -2,8 +2,8 @@
     <div class="container mx-auto h-auto p-3">
         <div class="grid grid-cols-12">
             <div class="col-span-7 flex flex-col gap-3">
-                <img height="200" width="200" src="https://www.mykingdom.com.vn/cdn/shop/files/LOGO_477ead77-117e-48bb-ab79-6bc282183e5b.png?v=1741751960" alt="" />
-                <strong>Tham gia ngay để nhận về tay thông tin ưu đãi và hữu ích từ Mykingdom</strong>
+                <img height="200" width="200" src="../../../assets/img/3.png" alt="" />
+                <strong>N</strong>
             </div>
             <div class="col-span-5">
                 <div class="flex flex-col gap-3">
@@ -25,5 +25,4 @@ const socialMedia = ref([
     'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.png'
 ]);
 </script>
-<style >
-</style>
+<style></style>

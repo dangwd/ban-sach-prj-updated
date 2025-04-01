@@ -8,7 +8,7 @@
         :autoplay="{ delay: 5000, disableOnInteraction: false }"
         :pagination="{ clickable: true }"
         :navigation="true"
-        class="mySwiper mt-10"
+        class="mySwiper"
     >
         <swiper-slide v-for="(image, index) in images" :key="index">
             <img :src="image" alt="Slide image" class="slide-image" />
