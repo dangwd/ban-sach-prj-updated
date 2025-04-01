@@ -1,8 +1,8 @@
 <script setup>
 import API from '@/api/api-main';
+import { formatPrice } from '@/helper/formatPrice';
 import { usePrimeVue } from 'primevue/config';
 import { useToast } from 'primevue/usetoast';
-import { formatPrice } from '@/helper/formatPrice';
 import { getCurrentInstance, onMounted, reactive, ref } from 'vue';
 const { proxy } = getCurrentInstance();
 const toast = useToast();
@@ -227,7 +227,7 @@ const fetchNations = async () => {
                         {{ sp.index + 1 }}
                     </template>
                 </Column>
-                <Column field="productName" style="max-width: 200px" header="Tên sản phẩm">
+                <Column field="productName" style="max-width: 200px" header="Tên sách">
                     <template #body="{ data }">
                         <span class="line-clamp-2">{{ data.productName }}</span>
                     </template>
@@ -244,27 +244,17 @@ const fetchNations = async () => {
                         </div>
                     </template>
                 </Column>
+                <Column header="Khuôn khổ"></Column>
+                <Column field="age" header="Lứa tuổi"></Column>
                 <Column field="genre" header="Thể loại">
                     <template #body="{ data }">
                         <span class="line-clamp-3">{{ data.genre?.genreName }}</span>
-                    </template>
-                </Column>
-                <Column field="brand" header="Thương hiệu">
-                    <template #body="{ data }">
-                        {{ data.brand?.brandName }}
                     </template>
                 </Column>
                 <Column field="quantity" header="Số lượng"> </Column>
                 <Column field="price" header="Giá">
                     <template #body="{ data }">
                         {{ formatPrice(data.price) }}
-                    </template>
-                </Column>
-                <Column field="madeIn" header="Xuất xứ"></Column>
-                <Column field="age" header="Độ tuổi"></Column>
-                <Column field="sex" header="Giới tính">
-                    <template #body="{ data }">
-                        {{ data.sex === 'M' ? 'Nam' : data.sex === 'F' ? 'Nữ' : 'Khác' }}
                     </template>
                 </Column>
                 <Column field="" header="Thao tác">
