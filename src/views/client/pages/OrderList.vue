@@ -199,10 +199,13 @@
 </template>
 <script setup>
 import API from '@/api/api-main';
-import { format } from 'date-fns';
-import { onMounted, reactive, ref } from 'vue';
-import { formatPrice } from '@/helper/formatPrice';
 import DetailOrder from '@/components/DetailOrder.vue';
+import { formatPrice } from '@/helper/formatPrice';
+import { format } from 'date-fns';
+import { useToast } from 'primevue/usetoast';
+import { getCurrentInstance, onMounted, reactive, ref } from 'vue';
+const { proxy } = getCurrentInstance();
+const toast = useToast();
 const Orders = ref([]);
 const paginator = reactive({
     rows: 5,
@@ -226,7 +229,7 @@ const StatusOpts = ref([
         label: 'Đã thanh toán',
         value: 'paid'
     }
-])
+]);
 const updateUserModal = ref(false);
 const User = ref({});
 const fetchAllOrder = async () => {
@@ -295,7 +298,11 @@ const updateUser = async () => {
     formData.append('items', JSON.stringify(userDetail.value));
     try {
         const res = await API.updatev2(`update-me`, formData);
-        console.log(res);
+        if (res) {
+            getMe();
+            proxy.$notify('S', 'Cập nhật thành công!', toast);
+            updateUserModal.value = false;
+        }
     } catch (error) {
         console.log(error);
     }
@@ -311,5 +318,4 @@ const UploadFileLocal = async (event, index) => {
     //   ProfileUser.value.files = URL.createObjectURL(file);
 };
 </script>
-<style>
-</style>
+<style></style>

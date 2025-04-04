@@ -4,8 +4,6 @@
             <img width="200" src="../../../assets/img/3.png" alt="" />
             <div class="w-[500px]">
                 <AutoComplete
-                    input-id="cc"
-                    :autocomplete="false"
                     v-model="value"
                     optionLabel="name"
                     :suggestions="itemSearch"
