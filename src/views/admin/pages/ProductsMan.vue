@@ -11,7 +11,7 @@ const $primevue = usePrimeVue();
 onMounted(() => {
     fetchAllProducts();
     fetchAllGenres();
-    fetchAllBrand();
+    fetchAllAuthors();
     fetchNations();
 });
 const Nations = ref([]);
@@ -31,7 +31,7 @@ const GenderOpts = ref([
         value: 'O'
     }
 ]);
-const BrandOpts = ref([]);
+const AuthorsOpts = ref([]);
 const GenresOpt = ref([]);
 const formData = new FormData();
 const Products = ref();
@@ -87,10 +87,10 @@ const fetchAllGenres = async () => {
         console.log(error);
     }
 };
-const fetchAllBrand = async () => {
+const fetchAllAuthors = async () => {
     try {
-        const res = await API.get(`brands`);
-        BrandOpts.value = res.data.metadata;
+        const res = await API.get(`author`);
+        AuthorsOpts.value = res.data.metadata.result;
     } catch (error) {
         console.log(error);
     }
@@ -188,7 +188,12 @@ const fetchNations = async () => {
     try {
         const res = await API.get(`nations?skip=0&limit=1000000`);
         Nations.value = res.data.metadata;
-    } catch (error) {}
+    } catch (error) {
+        console.log(error);
+    }
+};
+const removeImages = (file) => {
+    productDetail.value.images.splice(file, 1);
 };
 </script>
 
@@ -244,7 +249,7 @@ const fetchNations = async () => {
                         </div>
                     </template>
                 </Column>
-                <Column header="Khuôn khổ"></Column>
+                <Column field="dimensions" header="Khuôn khổ"></Column>
                 <Column field="age" header="Lứa tuổi"></Column>
                 <Column field="genre" header="Thể loại">
                     <template #body="{ data }">
@@ -325,7 +330,7 @@ const fetchNations = async () => {
                     <div class="col-span-7">
                         <div class="flex flex-col gap-6">
                             <div>
-                                <label for="name" class="block font-bold mb-3">Tên sản phẩm</label>
+                                <label for="name" class="block font-bold mb-3">Tên sách</label>
                                 <InputText id="name" v-model="productDetail.productName" required="true" autofocus :invalid="submitted && !productDetail.actorName" fluid />
                             </div>
                             <div>
@@ -340,11 +345,11 @@ const fetchNations = async () => {
                                 <div class="w-full">
                                     <label class="block font-bold mb-3">Thể loại</label>
                                     <!-- <InputText v-model="productDetail.genre" required="true" autofocus :invalid="submitted && !productDetail.genre" fluid /> -->
-                                    <Select v-model="productDetail.genre" :options="GenresOpt" optionLabel="genreName" class="w-full" optionValue="_id"></Select>
+                                    <Select v-model="productDetail.genre" :options="GenresOpt" :placeholder="productDetail?.genre?.genreName" optionLabel="genreName" class="w-full" optionValue="_id"></Select>
                                 </div>
                                 <div class="w-full">
-                                    <label class="block font-bold mb-3">Thương hiệu</label>
-                                    <Select v-model="productDetail.brand" class="w-full" :options="BrandOpts" optionLabel="brandName" optionValue="_id"></Select>
+                                    <label class="block font-bold mb-3">Tác giả</label>
+                                    <Select v-model="productDetail.author" class="w-full" :placeholder="productDetail?.author?.authorName" option-label="authorName" :options="AuthorsOpts" optionValue="_id"></Select>
                                 </div>
                             </div>
                             <div class="flex gap-2 justify-between items-center">
@@ -353,8 +358,8 @@ const fetchNations = async () => {
                                     <InputNumber v-model="productDetail.quantity" required="true" autofocus :invalid="submitted && !productDetail.quantity" fluid />
                                 </div>
                                 <div class="w-full">
-                                    <label class="block font-bold mb-3">Xuất xứ</label>
-                                    <Select v-model="productDetail.madeIn" :options="Nations" option-value="niceName" option-label="niceName" :invalid="submitted && !productDetail.madeIn" fluid />
+                                    <label class="block font-bold mb-3">Trọng lượng</label>
+                                    <InputNumber fluid v-model="productDetail.weight"></InputNumber>
                                 </div>
                             </div>
                             <div class="flex gap-2 justify-between items-center">
@@ -363,8 +368,8 @@ const fetchNations = async () => {
                                     <InputNumber v-model="productDetail.age" required="true" autofocus :invalid="submitted && !productDetail.age" fluid />
                                 </div>
                                 <div class="w-full">
-                                    <label class="block font-bold mb-3">Giới tính</label>
-                                    <Dropdown v-model="productDetail.sex" class="w-full" :options="GenderOpts" optionValue="value" optionLabel="label"></Dropdown>
+                                    <label class="block font-bold mb-3">Khuôn khổ</label>
+                                    <InputText fluid v-model="productDetail.dimensions"></InputText>
                                 </div>
                             </div>
                         </div>
@@ -400,7 +405,7 @@ const fetchNations = async () => {
                 </div>
                 <div class="flex flex-col gap-2 w-full">
                     <label for="">Thương hiệu</label>
-                    <Select v-model="filter.brand" :options="BrandOpts" optionLabel="brandName" optionValue="_id" fluid></Select>
+                    <Select v-model="filter.brand" :options="AuthorsOpts" optionLabel="authorName" optionValue="_id" fluid></Select>
                 </div>
             </div>
             <template #footer>
