@@ -403,10 +403,10 @@ const removeImages = (file) => {
                     <label for="">Thể loại</label>
                     <Select v-model="filter.genre" :options="GenresOpt" optionLabel="genreName" class="w-full" optionValue="_id" fluid></Select>
                 </div>
-                <div class="flex flex-col gap-2 w-full">
+                <!-- <div class="flex flex-col gap-2 w-full">
                     <label for="">Thương hiệu</label>
                     <Select v-model="filter.brand" :options="AuthorsOpts" optionLabel="authorName" optionValue="_id" fluid></Select>
-                </div>
+                </div> -->
             </div>
             <template #footer>
                 <Button label="Hủy" icon="pi pi-times" severity="secondary" @click="filterModal = false" />

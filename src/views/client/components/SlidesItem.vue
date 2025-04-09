@@ -1,15 +1,5 @@
 <template>
-    <swiper
-        v-if="images?.length > 0"
-        :modules="[Autoplay, Navigation, Pagination]"
-        :slides-per-view="1"
-        :space-between="10"
-        :loop="true"
-        :autoplay="{ delay: 5000, disableOnInteraction: false }"
-        :pagination="{ clickable: true }"
-        :navigation="true"
-        class="mySwiper"
-    >
+    <swiper v-if="images?.length > 0" :modules="[Autoplay, Navigation, Pagination]" :slides-per-view="1" :space-between="10" :loop="true" :autoplay="{ delay: 5000, disableOnInteraction: false }" :pagination="{ clickable: true }" class="mySwiper">
         <swiper-slide v-for="(image, index) in images" :key="index">
             <img :src="image" alt="Slide image" class="slide-image" />
         </swiper-slide>

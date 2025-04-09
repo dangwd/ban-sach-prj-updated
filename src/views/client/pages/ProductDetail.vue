@@ -95,7 +95,7 @@
                     <Avatar crossorigin="anonymous" :image="item.user?.thumbnail" class="mr-2 object-cover" size="large" shape="circle" />
                     <div class="flex flex-col gap-2">
                         <strong>{{ item.user?.name }}</strong>
-                        <Rating v-model="item.rating" />
+                        <Rating disabled v-model="item.rating" />
                         <span>{{ item.content }}</span>
                     </div>
                 </div>
