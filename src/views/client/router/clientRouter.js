@@ -38,7 +38,21 @@ export default [
                 name: 'payment-ing',
                 component: () => import('@/views/client/pages/PaymentPage.vue')
             },
-
+            {
+                path: '/client/manga-comics',
+                name: 'manga-comics',
+                component: () => import('@/views/client/pages/MangaComic.vue')
+            },
+            {
+                path: '/client/literature-vn',
+                name: 'literature-vn',
+                component: () => import('@/views/client/pages/LiteratureVN.vue')
+            },
+            {
+                path: '/client/literature-foreign',
+                name: 'literature-foreign',
+                component: () => import('@/views/client/pages/LiteratureForeign.vue')
+            }
         ]
     }
 ];

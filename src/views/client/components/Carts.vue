@@ -97,11 +97,11 @@ const onQuantityChange = async (e, data) => {
     totalCartValue.value = res.data.metadata.totalPrice;
 };
 const directPayment = () => {
-    if (totalCartValue.value > 0) {
-        cartModal.value = false;
-        router.push('/client/payment');
+    if (!itemInCart.value.items?.length) {
+        return proxy.$notify('W', 'Không có sản phẩm trong giỏ hàng!', toast);
     }
-    return proxy.$notify('W', 'Không có sản phẩm trong giỏ hàng!', toast);
+    cartModal.value = false;
+    router.push('/client/payment');
 };
 watch(
     () => cartStore.cart,
