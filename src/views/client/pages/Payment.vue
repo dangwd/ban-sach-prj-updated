@@ -115,10 +115,10 @@
 <script setup>
 import API from '@/api/api-main';
 import { useAuthStore } from '@/store';
-import { useCartStore } from '../store/carts';
 import { useToast } from 'primevue/usetoast';
-import { computed, getCurrentInstance, onMounted, reactive, ref, watch } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useCartStore } from '../store/carts';
 const { proxy } = getCurrentInstance();
 const toast = useToast();
 const router = useRouter();
@@ -261,7 +261,7 @@ const confirmOrder = async () => {
 
     let data = {
         ...payload.value,
-        type: route.query.prd ? 'NOW' : 'CART',
+        orderType: route.query.prd ? '' : 'Cart',
         coupon: couponData.value.couponId,
         items
     };
@@ -290,7 +290,6 @@ const fetchProductById = async (id) => {
 watch(route, (newVal, oldVal) => {
     location.reload();
 });
-
 </script>
 <style>
 .coupon {
