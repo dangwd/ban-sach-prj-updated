@@ -10,9 +10,11 @@ const { proxy } = getCurrentInstance();
 const toast = useToast();
 
 onMounted(() => {
-    fetchAllGenres();
+    fetchAllOrder();
 });
-
+const filter = reactive({
+    status: ''
+});
 const paginator = reactive({
     rows: 5,
     page: 0,
@@ -24,10 +26,31 @@ const filterDialog = ref(false);
 const orderDetail = ref({});
 
 const submitted = ref(false);
-
-const fetchAllGenres = async () => {
+const statusOpts = ref([
+    {
+        label: 'Đã đặt hàng',
+        value: 'pending'
+    },
+    {
+        label: 'Đã thanh toán',
+        value: 'paid'
+    },
+    {
+        label: 'Đã hủy',
+        value: 'cancelled'
+    },
+    {
+        label: 'Đã giao hàng',
+        value: 'delivered'
+    },
+    {
+        label: 'Đã hủy',
+        value: 'cancelled'
+    }
+]);
+const fetchAllOrder = async (query = '') => {
     try {
-        const res = await API.get(`order?skip=0&limit=20`);
+        const res = await API.get(`order?skip=0&limit=20&status=${query}`);
         Invoices.value = res.data.metadata.result;
         paginator.total = res.data.metadata.total;
     } catch (error) {
@@ -50,7 +73,7 @@ const saveGenre = async () => {
         if (res.data) {
             orderDialog.value = false;
             proxy.$notify('S', 'Thành công!', toast);
-            fetchAllGenres();
+            fetchAllOrder();
         }
     } catch (error) {
         console.log(error);
@@ -58,6 +81,14 @@ const saveGenre = async () => {
 };
 const openFilter = () => {
     filterDialog.value = true;
+};
+const handleFilter = () => {
+    let queryArr = [];
+    if (filter.status) {
+        queryArr.push(`status=${filter.status}`);
+    }
+    let queryStr = queryArr.join('');
+    fetchAllOrder(queryStr);
 };
 </script>
 
@@ -89,9 +120,19 @@ const openFilter = () => {
                         {{ data.items.map((el) => el.quantity).join(', ') }}
                     </template>
                 </Column>
-                <Column header="KM">
+                <Column header="Tên khách hàng">
                     <template #body="{ data }">
-                        {{ data.coupon ? `${data?.coupon?.CouponName} (${formatPrice(data?.coupon?.CouponValue)})` : `Không KM` }}
+                        {{ data.user?.name }}
+                    </template>
+                </Column>
+                <Column header="Số điện thoại">
+                    <template #body="{ data }">
+                        {{ data.user?.phone }}
+                    </template>
+                </Column>
+                <Column header="Phương thức thanh toán">
+                    <template #body="{ data }">
+                        {{ data.paymentMethod == 'cod' ? `COD` : `Zalopay` }}
                     </template>
                 </Column>
                 <Column header="Giá trị đơn hàng">
@@ -142,7 +183,11 @@ const openFilter = () => {
         </Dialog>
 
         <Dialog v-model:visible="filterDialog" :style="{ width: '450px' }" header="Bộ lọc" :modal="true">
-            <Dropdown :options="statusOpts"></Dropdown>
+            <label for="">Trạng thái đơn hàng</label>
+            <Dropdown v-model="filter.status" optionValue="value" optionLabel="label" class="w-full" :options="statusOpts"></Dropdown>
+            <template #footer>
+                <Button @click="handleFilter()" label="Lọc"></Button>
+            </template>
         </Dialog>
     </div>
 </template>

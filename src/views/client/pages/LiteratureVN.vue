@@ -31,14 +31,10 @@ const filter = reactive({
 });
 onMounted(() => {
     fetchAllProducts();
-    fetchBrand();
 });
 
-const fetchAllProducts = async (query = '') => {
-    let url = `products?skip=${paginator.page}&limit=${paginator.rows}`;
-    if (query) {
-        url += `${query}`;
-    }
+const fetchAllProducts = async () => {
+    let url = `products?skip=${paginator.page}&limit=${paginator.rows}&genre=67ef83f2db8560a6cb1946f4`;
     try {
         const res = await API.get(url);
         Products.value = res.data.metadata.result;
@@ -47,33 +43,10 @@ const fetchAllProducts = async (query = '') => {
         console.log(error);
     }
 };
-const fetchBrand = async () => {
-    try {
-        const res = await API.get(`brands`);
-        Brands.value = res.data.metadata;
-    } catch (error) {}
-};
-const handleFilter = () => {
-    let queryArr = [];
-    if (filter.price) {
-        queryArr.push(`&price=${filter.price}`);
-    }
-    if (filter.age) {
-        queryArr.push(`&age=${filter.age}`);
-    }
-    if (filter.sex) {
-        queryArr.push(`&sex=${filter.sex}`);
-    }
-    if (filter.genre) {
-        queryArr.push(`&genre=${filter.genre}`);
-    }
-    let queryStr = queryArr.join('');
-    fetchAllProducts(queryStr);
-};
+
 const onPageChange = (e) => {
     paginator.page = e.page;
     paginator.rows = e.rows;
-    handleFilter();
 };
 </script>
 <style></style>

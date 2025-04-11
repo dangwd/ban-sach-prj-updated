@@ -136,7 +136,8 @@ const Wards = ref([]);
 const itemCart = ref([]);
 
 const payload = ref({
-    email: user.email
+    email: user.email,
+    paymentMethod: 'cod'
 });
 const PaymentOpts = ref([
     {

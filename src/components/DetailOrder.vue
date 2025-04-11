@@ -6,7 +6,7 @@
             <div v-if="detailOrder" class="flex flex-col gap-3">
                 <div class="flex items-center gap-2">
                     <strong>Mã đơn hàng: {{ detailOrder._id }}</strong>
-                    <Tag :value="detailOrder.status"></Tag>
+                    <Tag :value="formatStatusOrder(detailOrder.status)"></Tag>
                 </div>
                 <span v-if="detailOrder.createdAt" class="font-normal">Ngày tạo đơn: {{ format(detailOrder.createdAt, 'dd/MM/yyyy') }}</span>
                 <div class="border border-gray-300 p-3 rounded-lg">
@@ -102,6 +102,7 @@ import { getCurrentInstance, ref } from 'vue';
 const { proxy } = getCurrentInstance();
 const toast = useToast();
 
+import { formatStatusOrder } from '@/helper/formatStatusOrder';
 import { format } from 'date-fns';
 const props = defineProps(['data', 'client']);
 const events = ref(['Đã đặt hàng']);

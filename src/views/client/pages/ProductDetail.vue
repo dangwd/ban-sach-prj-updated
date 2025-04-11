@@ -34,20 +34,28 @@
                                         <strong>{{ detail._id }}</strong>
                                     </div>
                                     <div class="flex gap-2">
-                                        <span>Xuất xứ: </span>
-                                        <strong> {{ detail.madeIn }} </strong>
+                                        <span>Tác giả: </span>
+                                        <strong> {{ detail.author?.authorName }} </strong>
                                     </div>
                                     <div class="flex gap-2">
-                                        <span>Tuổi: </span>
-                                        <strong>{{ detail.age }}</strong>
+                                        <span>Lứa tuổi phù hợp: </span>
+                                        <strong>{{ detail.age }} tuổi</strong>
                                     </div>
                                     <div class="flex gap-2">
-                                        <span>Thương hiệu: </span>
-                                        <strong>{{ detail.brand?.brandName }}</strong>
+                                        <span>Thể loại: </span>
+                                        <strong>{{ detail.genre?.genreName }}</strong>
                                     </div>
                                     <div class="flex gap-2">
-                                        <span>Giới tính: </span>
-                                        <strong>{{ detail.sex === 'M' ? 'Nam' : detail.sex === 'F' ? 'Nữ' : 'Khác' }}</strong>
+                                        <span>Khuôn khổ: </span>
+                                        <strong>{{ detail.dimensions }}</strong>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <span>Trọng lượng: </span>
+                                        <strong>{{ detail.weight }}g</strong>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <span>Số lượng còn lại:</span>
+                                        <strong>{{ detail.quantity }}</strong>
                                     </div>
                                 </div>
                             </div>
