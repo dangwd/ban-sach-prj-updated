@@ -99,6 +99,7 @@ const UploadFileLocal = async (event, index) => {
     const file = event.target.files[0];
     formData.append('images', file);
     document.querySelectorAll('.click-file')[index].value = '';
+    authorDetail.value.imageLink = URL.createObjectURL(file);
 };
 </script>
 
@@ -156,7 +157,8 @@ const UploadFileLocal = async (event, index) => {
         <Dialog v-model:visible="authorDialog" :style="{ width: '60%' }" header="Tác giả" :modal="true">
             <div class="grid grid-cols-12 gap-3">
                 <div class="col-span-3 flex flex-col gap-2">
-                    <Image width="300" crossorigin="anonymous" :src="authorDetail?.images ? authorDetail.images : `https://placehold.co/300x300`"></Image>
+                    <Image v-if="authorDetail.imageLink" width="300" crossorigin="anonymous" :src="authorDetail?.imageLink"></Image>
+                    <Image v-else width="300" crossorigin="anonymous" :src="authorDetail?.images ? authorDetail.images : `https://placehold.co/300x300`"></Image>
                     <Button label="Tải lên" icon="pi pi-cloud-upload" class="btn-up-file" raised @click="Openfile(index)" />
                     <input type="file" class="hidden click-file" @change="UploadFileLocal($event, 0)" />
                 </div>

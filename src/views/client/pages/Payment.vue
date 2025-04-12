@@ -2,7 +2,7 @@
     <div class="h-screen container mx-auto py-10">
         <div class="grid grid-cols-2 gap-3">
             <div class="flex flex-col gap-3">
-                <img width="200" src="https://cdn.shopify.com/s/files/1/0731/6514/4343/files/logo-254x76_1_x320.png?v=1697473116" alt="" />
+                <img width="200" src="../../../assets/img/3.png" alt="" />
                 <strong class="text-lg">Liên hệ</strong>
                 <div class="flex flex-col gap-2">
                     <label class="font-semibold">Email hoặc số điện thoại di động</label>
@@ -71,7 +71,8 @@
                     <div class="flex flex-col gap-3">
                         <div class="flex justify-between items-center text-lg">
                             <span>Tổng tiền đơn hàng</span>
-                            <strong v-if="route.query.prd">{{ couponData ? itemCart.price - couponData.discountValue : formatPrice(totalComputed) }}đ</strong>
+                            {{ couponData }}
+                            <strong v-if="route.query.prd">{{ couponData ? itemCart.totalPrice - couponData?.discountValue : formatPrice(totalComputed) }}đ</strong>
                             <strong v-else>{{ formatPrice(couponData?.discountValue ? itemCart.totalPrice - couponData?.discountValue : itemCart.totalPrice) }}đ</strong>
                         </div>
                         <div class="flex justify-between items-center">
@@ -123,7 +124,7 @@ const { proxy } = getCurrentInstance();
 const toast = useToast();
 const router = useRouter();
 const isLoading = ref(false);
-const couponData = ref({});
+const couponData = ref(null);
 const Coupons = ref([]);
 const cartStore = useCartStore();
 const auth = useAuthStore();
