@@ -71,8 +71,7 @@
                     <div class="flex flex-col gap-3">
                         <div class="flex justify-between items-center text-lg">
                             <span>Tổng tiền đơn hàng</span>
-                            {{ couponData }}
-                            <strong v-if="route.query.prd">{{ couponData ? itemCart.totalPrice - couponData?.discountValue : formatPrice(totalComputed) }}đ</strong>
+                            <strong v-if="route.query.prd">{{ couponData?.discountValue ? itemCart.price - couponData.discountValue : formatPrice(totalComputed) }}đ </strong>
                             <strong v-else>{{ formatPrice(couponData?.discountValue ? itemCart.totalPrice - couponData?.discountValue : itemCart.totalPrice) }}đ</strong>
                         </div>
                         <div class="flex justify-between items-center">
