@@ -1,10 +1,8 @@
 const STATUS_MAPPING = {
-    pending: 'Đã đặt hàng',
+    pending: 'Chờ xác nhận',
     paid: 'Đã thanh toán',
     cancelled: 'Đã hủy',
-    delivered: 'Đã giao hàng',
-    shipped: 'Đang giao hàng',
-    draft: 'Nháp'
+    confirmed: 'Đã xác nhận'
 };
 
 export const formatStatusOrder = (status) => STATUS_MAPPING[status] || '';

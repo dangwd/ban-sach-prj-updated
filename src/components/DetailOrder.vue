@@ -6,7 +6,6 @@
             <div v-if="detailOrder" class="flex flex-col gap-3">
                 <div class="flex items-center gap-2">
                     <strong>Mã đơn hàng: {{ detailOrder._id }}</strong>
-                    <Tag :value="formatStatusOrder(detailOrder.status)"></Tag>
                 </div>
                 <span v-if="detailOrder.createdAt" class="font-normal">Ngày tạo đơn: {{ format(detailOrder.createdAt, 'dd/MM/yyyy') }}</span>
                 <div class="border border-gray-300 p-3 rounded-lg">
@@ -37,7 +36,7 @@
                                 </div>
                                 <div class="flex flex-wrap items-center justify-between">
                                     <span>Giảm giá: </span>
-                                    <strong>{{ detailOrder.coupon ? `- ${formatPrice(detailOrder.coupon?.CouponValue)}` : 0 }}đ</strong>
+                                    <strong>{{ detailOrder.coupon ? `- ${formatPrice(detailOrder.coupon?.CouponValue)}` : 0 }}%</strong>
                                 </div>
                                 <div class="flex flex-wrap items-center justify-between">
                                     <span>Thành tiền: </span>
@@ -46,9 +45,15 @@
                             </div>
                         </div>
                         <div class="border border-gray-300 p-3 rounded-lg">
-                            <div class="flex items-center justify-between">
-                                <strong class="text-lg">Trạng thái đơn hàng</strong>
-                                <Select :disabled="detailOrder.status === 'cancelled' || client" class="w-52" v-model="detailOrder.status" option-value="value" :options="OrderStatusOpts" @change="onStatusChange($event)" option-label="label"></Select>
+                            <div v-if="detailOrder.status !== 'confirmed' && !client" class="flex items-center justify-between">
+                                <strong class="text-lg">Thao tác</strong>
+                                <div class="flex gap-2">
+                                    <Button @click="aceptOrder(detailOrder._id)" outlined label="Xác nhận đơn hàng"></Button>
+                                    <Button label="Hủy" @click="cancelOrder(detailOrder._id)"></Button>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <Tag :severity="detailOrder.status === 'confirmed' ? `success` : `primary`" :value="detailOrder.status === 'confirmed' ? `Đơn đã xác nhận` : `Đơn đã hủy`"></Tag>
                             </div>
                         </div>
                     </div>
@@ -102,7 +107,6 @@ import { getCurrentInstance, ref } from 'vue';
 const { proxy } = getCurrentInstance();
 const toast = useToast();
 
-import { formatStatusOrder } from '@/helper/formatStatusOrder';
 import { format } from 'date-fns';
 const props = defineProps(['data', 'client']);
 const events = ref(['Đã đặt hàng']);
@@ -156,6 +160,33 @@ const onStatusChange = async (e) => {
             fetchDetailOrder();
             visible.value = false;
             proxy.$notify('S', 'Cập nhật thành công!', toast);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+const aceptOrder = async (id) => {
+    try {
+        const res = await API.create(`order/${id}/status`);
+        if (res.data) {
+            proxy.$notify('S', 'Xác nhận thành công!', toast);
+            setTimeout(() => {
+                location.reload();
+            }, 200);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const cancelOrder = async (id) => {
+    try {
+        const res = await API.create(`order/${id}/cancel`);
+        if (res.data) {
+            proxy.$notify('S', 'Hủy đơn thành công!', toast);
+            setTimeout(() => {
+                location.reload();
+            }, 200);
         }
     } catch (error) {
         console.log(error);
