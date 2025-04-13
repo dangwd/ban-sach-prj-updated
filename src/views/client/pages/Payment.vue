@@ -1,5 +1,5 @@
 <template>
-    <div class="h-screen container mx-auto py-10">
+    <div class="h-auto container mx-auto py-10">
         <div class="grid grid-cols-2 gap-3">
             <div class="flex flex-col gap-3">
                 <img width="200" src="../../../assets/img/3.png" alt="" />
@@ -11,29 +11,29 @@
                 <strong class="text-lg">Địa chỉ giao hàng</strong>
                 <div class="flex flex-col gap-2">
                     <label class="font-semibold">Tỉnh/Thành phố</label>
-                    <Select v-model="selectedProvince" filter fluid :options="Province" option-label="FullName" @change="onProvinceChange"></Select>
+                    <Select v-model="selectedProvince" filter :placeholder="payload.province || ''" fluid :options="Province" option-label="FullName" @change="onProvinceChange"></Select>
                 </div>
                 <div class="flex justify-between gap-2">
                     <div class="flex flex-col gap-2 w-full">
                         <label class="font-semibold">Quận/Huyện</label>
-                        <Select v-model="selectedDistrict" filter fluid :options="Districts" @change="onDistrictChange" option-label="FullName"></Select>
+                        <Select v-model="selectedDistrict" :invalid="submited && !payload.district" :placeholder="payload.district || ''" filter fluid :options="Districts" @change="onDistrictChange" option-label="FullName"></Select>
                     </div>
                     <div class="flex flex-col gap-2 w-full">
                         <label class="font-semibold">Phường/Xã</label>
-                        <Select filter v-model="payload.ward" :options="Wards" option-value="FullName" option-label="FullName" fluid></Select>
+                        <Select filter v-model="payload.ward" :invalid="submited && !payload.ward" :placeholder="payload.ward || ''" :options="Wards" option-value="FullName" option-label="FullName" fluid></Select>
                     </div>
                 </div>
                 <div class="flex flex-col gap-2">
                     <label class="font-semibold">Địa chỉ</label>
-                    <InputText v-model="payload.addressLine"></InputText>
+                    <InputText v-model="payload.addressLine" :invalid="submited && !payload.addressLine" :placeholder="payload.addressLine || ''"></InputText>
                 </div>
                 <div class="flex flex-col gap-2">
                     <label class="font-semibold">Số điện thoại</label>
-                    <InputText v-model="payload.phone"></InputText>
+                    <InputText v-model="payload.phone" :invalid="submited && !payload.phone"></InputText>
                 </div>
                 <div class="flex flex-col gap-2">
                     <label class="font-semibold">Họ tên</label>
-                    <InputText v-model="payload.fullName"></InputText>
+                    <InputText v-model="payload.fullName" :invalid="submited && !payload.fullName"></InputText>
                 </div>
                 <div class="flex flex-col gap-2">
                     <label class="font-semibold">Ghi chú</label>
@@ -60,7 +60,7 @@
                                             >Số lượng: <strong class="text-primary">{{ item.quantity }}</strong></span
                                         >
                                         <span
-                                            >Giá sản phẩm: <strong class="text-primary">{{ formatPrice(item.price) }}đ</strong></span
+                                            >Giá sản phẩm: <strong class="text-primary">{{ formatPrice(route.query.prd ? item.price - (item.price * item.discount) / 100 : item.finalSubTotal) }}đ</strong></span
                                         >
                                     </div>
                                     <hr />
@@ -71,11 +71,11 @@
                     <div class="flex flex-col gap-3">
                         <div class="flex justify-between items-center text-lg">
                             <span>Tổng tiền đơn hàng</span>
-                            <strong v-if="route.query.prd">{{ couponData?.discountValue ? itemCart.price - couponData.discountValue : formatPrice(totalComputed) }}đ </strong>
-                            <strong v-else>{{ formatPrice(couponData?.discountValue ? itemCart.totalPrice - couponData?.discountValue : itemCart.totalPrice) }}đ</strong>
+                            <strong v-if="route.query.prd">{{ couponData?.discountValue ? formatPrice(couponData.finalPrice) : formatPrice(totalComputed) }}đ (-{{ couponData?.couponValue }}%)</strong>
+                            <strong v-else>{{ formatPrice(couponData?.discountValue ? couponData.finalPrice : itemCart.totalPrice) }}đ (-{{ couponData?.couponValue }}%)</strong>
                         </div>
                         <div class="flex justify-between items-center">
-                            <Button label="Quay lại" text></Button>
+                            <Button @click="router.push(`/`)" label="Quay lại" text></Button>
                             <div class="flex gap-2">
                                 <Button @click="openCouponDlg" label="Coupon giảm giá" icon="pi pi-ticket" text></Button>
 
@@ -95,19 +95,28 @@
                 </div>
             </template>
 
-            <ScrollPanel v-for="(item, index) in Coupons" :key="index" style="width: 100%" class="flex flex-col my-5">
+            <ScrollPanel
+                v-if="Coupons.filter((el) => new Date(el.expiryDate) >= new Date())?.length > 0"
+                v-for="(item, index) in Coupons.filter((el) => new Date(el.expiryDate) >= new Date())"
+                :key="index"
+                style="width: 100%"
+                class="flex flex-col my-5"
+            >
                 <div @click="useCoupon(item)" class="coupon hover:scale-105 transition-all ease-in-out duration-150">
                     <div class="left"></div>
                     <div class="center text-white">
                         <div class="flex flex-col gap-2">
                             <div class="">{{ item.CouponName }}</div>
-                            <div class="">Giá trị: {{ formatPrice(item.CouponValue) }}đ</div>
+                            <div class="">Giá trị: {{ formatPrice(item.CouponValue) }}%</div>
                             <div class="">Giá trị đơn hàng:{{ formatPrice(item.minOrderValue) }}đ</div>
+                            <div class="">Hạn sử dụng: {{ format(item.expiryDate, 'dd/MM/yyyy') }}</div>
+                            <div class="">Số lượng còn lại: {{ item.usageLimit }}</div>
                         </div>
                     </div>
                     <div class="right"></div>
                 </div>
             </ScrollPanel>
+            <div class="text-center" v-else>Danh sách trống</div>
         </Drawer>
         <Loading v-if="isLoading"></Loading>
     </div>
@@ -115,6 +124,7 @@
 <script setup>
 import API from '@/api/api-main';
 import { useAuthStore } from '@/store';
+import { format } from 'date-fns';
 import { useToast } from 'primevue/usetoast';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -123,7 +133,7 @@ const { proxy } = getCurrentInstance();
 const toast = useToast();
 const router = useRouter();
 const isLoading = ref(false);
-const couponData = ref(null);
+const couponData = ref({});
 const Coupons = ref([]);
 const cartStore = useCartStore();
 const auth = useAuthStore();
@@ -131,6 +141,7 @@ const user = auth.user.metadata.user;
 const selectedProvince = ref();
 const selectedDistrict = ref();
 const Province = ref([]);
+const submited = ref(false);
 const Districts = ref([]);
 const Wards = ref([]);
 const itemCart = ref([]);
@@ -157,10 +168,11 @@ onMounted(async () => {
     if (route.query.prd) {
         fetchProductById(route.query.prd);
     }
+    getMe();
 });
 const totalComputed = computed(() => {
     return itemCart.value?.items?.reduce((total, el) => {
-        return total + el.price * el.quantity;
+        return total + el.price - ((el.price * el.discount) / 100) * el.quantity;
     }, 0);
 });
 const formatPrice = (price) => {
@@ -266,7 +278,9 @@ const confirmOrder = async () => {
         coupon: couponData.value.couponId,
         items
     };
-
+    submited.value = true;
+    if (!validateData(data)) return;
+    submited.value = true;
     try {
         const res = await API.create(`order/CheckoutWithPayload`, data);
 
@@ -274,6 +288,8 @@ const confirmOrder = async () => {
         if (res.data?.metadata.return_code === 1) {
             router.push('/client/payment-ing');
             window.open(res.data?.metadata?.order_url, '_blank');
+        } else {
+            router.push('/client/payment-check');
         }
     } catch (error) {
         proxy.$notify('E', error, toast);
@@ -288,6 +304,20 @@ const fetchProductById = async (id) => {
         console.log(error);
     }
 };
+const getMe = async () => {
+    try {
+        const res = await API.get('get-me');
+        Object.assign(payload.value, res.data.metadata);
+        payload.value.fullName = res.data.metadata.name;
+    } catch (error) {}
+};
+const validateData = (data) => {
+    if (!data.province && !data.district && !data.ward && !data.addressLine && !data.phone) {
+        proxy.$notify('E', 'Vui lòng nhập đủ thông tin!', toast);
+        return false;
+    }
+    return true;
+};
 watch(route, (newVal, oldVal) => {
     location.reload();
 });
@@ -295,7 +325,7 @@ watch(route, (newVal, oldVal) => {
 <style>
 .coupon {
     width: 95%;
-    height: 100px;
+    height: 150px;
     border-radius: 10px;
     overflow: hidden;
     margin: auto;
