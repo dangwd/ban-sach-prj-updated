@@ -34,14 +34,12 @@ onMounted(() => {
     fetchBrand();
 });
 
-const fetchAllProducts = async (query = '') => {
-    let url = `products?skip=${paginator.page}&limit=${paginator.rows}`;
-    if (query) {
-        url += `${query}`;
-    }
+const fetchAllProducts = async () => {
+    let url = `product/name/Manga-Comic?skip=${paginator.page}&limit=${paginator.rows}`;
+
     try {
         const res = await API.get(url);
-        Products.value = res.data.metadata.result;
+        Products.value = res.data.metadata;
         paginator.total = res.data.metadata.total;
     } catch (error) {
         console.log(error);
@@ -53,23 +51,23 @@ const fetchBrand = async () => {
         Brands.value = res.data.metadata;
     } catch (error) {}
 };
-const handleFilter = () => {
-    let queryArr = [];
-    if (filter.price) {
-        queryArr.push(`&price=${filter.price}`);
-    }
-    if (filter.age) {
-        queryArr.push(`&age=${filter.age}`);
-    }
-    if (filter.sex) {
-        queryArr.push(`&sex=${filter.sex}`);
-    }
-    if (filter.genre) {
-        queryArr.push(`&genre=${filter.genre}`);
-    }
-    let queryStr = queryArr.join('');
-    fetchAllProducts(queryStr);
-};
+// const handleFilter = () => {
+//     let queryArr = [];
+//     if (filter.price) {
+//         queryArr.push(`&price=${filter.price}`);
+//     }
+//     if (filter.age) {
+//         queryArr.push(`&age=${filter.age}`);
+//     }
+//     if (filter.sex) {
+//         queryArr.push(`&sex=${filter.sex}`);
+//     }
+//     if (filter.genre) {
+//         queryArr.push(`&genre=${filter.genre}`);
+//     }
+//     let queryStr = queryArr.join('');
+//     fetchAllProducts(queryStr);
+// };
 const onPageChange = (e) => {
     paginator.page = e.page;
     paginator.rows = e.rows;

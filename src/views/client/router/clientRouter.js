@@ -52,6 +52,11 @@ export default [
                 path: '/client/literature-foreign',
                 name: 'literature-foreign',
                 component: () => import('@/views/client/pages/LiteratureForeign.vue')
+            },
+            {
+                path: '/client/payment-check',
+                name: 'payment-check',
+                component: () => import('@/components/PaymentSuccess.vue')
             }
         ]
     }

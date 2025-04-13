@@ -34,10 +34,10 @@ onMounted(() => {
 });
 
 const fetchAllProducts = async () => {
-    let url = `products?skip=${paginator.page}&limit=${paginator.rows}&genre=67ef83f2db8560a6cb1946f4`;
+    let url = `product/name/Văn học Việt Nam?skip=${paginator.page}&limit=${paginator.rows}`;
     try {
         const res = await API.get(url);
-        Products.value = res.data.metadata.result;
+        Products.value = res.data.metadata;
         paginator.total = res.data.metadata.total;
     } catch (error) {
         console.log(error);

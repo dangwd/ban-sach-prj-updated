@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div v-else>
-                                <Tag :severity="detailOrder.status === 'confirmed' ? `success` : `primary`" :value="detailOrder.status === 'confirmed' ? `Đơn đã xác nhận` : `Đơn đã hủy`"></Tag>
+                                <Tag :severity="detailOrder.status === 'confirmed' ? `success` : `primary`" :value="formatStatusOrder(detailOrder.status)"></Tag>
                             </div>
                         </div>
                     </div>
@@ -107,6 +107,7 @@ import { getCurrentInstance, ref } from 'vue';
 const { proxy } = getCurrentInstance();
 const toast = useToast();
 
+import { formatStatusOrder } from '@/helper/formatStatusOrder';
 import { format } from 'date-fns';
 const props = defineProps(['data', 'client']);
 const events = ref(['Đã đặt hàng']);

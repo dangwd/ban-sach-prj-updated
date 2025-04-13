@@ -9,25 +9,26 @@
                     <strong class="text-lg">Giá</strong>
                     <div class="flex flex-col gap-3">
                         <div class="flex gap-2">
-                            <RadioButton v-model="filter.price" value="199999" @change="handleFilter()"></RadioButton>
-                            <span class="text-base">Dưới 200.000</span>
+                            <RadioButton v-model="filter.price" value="19999" @change="handleFilter()"></RadioButton>
+                            <span class="text-base">Dưới 20.000</span>
                         </div>
                         <div class="flex gap-2">
-                            <RadioButton v-model="filter.price" value="200000:500000" @change="handleFilter()"></RadioButton>
+                            <RadioButton v-model="filter.price" value="20000:50000" @change="handleFilter()" />
+                            <span class="text-base">20.000 - 50.000</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <RadioButton v-model="filter.price" value="50000:100000" @change="handleFilter()" />
+                            <span class="text-base">50.000 - 100.000</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <RadioButton v-model="filter.price" value="100000:200000" @change="handleFilter()" />
+                            <span class="text-base">100.000 - 200.000</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <RadioButton v-model="filter.price" value="200000:500000" @change="handleFilter()" />
                             <span class="text-base">200.000 - 500.000</span>
                         </div>
-                        <div class="flex gap-2">
-                            <RadioButton v-model="filter.price" value="500000:1000000" @change="handleFilter()"></RadioButton>
-                            <span class="text-base">500.000 - 1.000.000</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <RadioButton v-model="filter.price" value="1000000:2000000" @change="handleFilter()"></RadioButton>
-                            <span class="text-base">1.000.000 - 2.000.000</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <RadioButton v-model="filter.price" value="2000000:5000000" @change="handleFilter()"></RadioButton>
-                            <span class="text-base">2.000.000 - 5.000.000</span>
-                        </div>
+
                         <div class="flex gap-2">
                             <RadioButton v-model="filter.price" value="" @change="handleFilter()"></RadioButton>
                             <span class="text-base">Tất cả</span>
@@ -55,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="border border-gray-300 p-3 rounded-lg shadow flex flex-col gap-3">
+                <!-- <div class="border border-gray-300 p-3 rounded-lg shadow flex flex-col gap-3">
                     <strong class="text-lg">Giới tính</strong>
                     <div class="flex flex-col gap-3">
                         <div class="flex gap-2">
@@ -82,7 +83,7 @@
                             <span class="text-base">{{ item.brandName }}</span>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div v-if="Products?.length > 0" class="col-span-9 flex flex-col gap-2">
                 <ProductsGrid :data="Products" :layout="true"></ProductsGrid>
@@ -93,9 +94,9 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref, reactive } from 'vue';
-import ProductsGrid from '../components/ProductsGrid.vue';
 import API from '@/api/api-main';
+import { onMounted, reactive, ref } from 'vue';
+import ProductsGrid from '../components/ProductsGrid.vue';
 const Products = ref([]);
 const Brands = ref([]);
 const paginator = reactive({
@@ -156,5 +157,4 @@ const onPageChange = (e) => {
     handleFilter();
 };
 </script>
-<style>
-</style>
+<style></style>

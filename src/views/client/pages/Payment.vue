@@ -71,8 +71,11 @@
                     <div class="flex flex-col gap-3">
                         <div class="flex justify-between items-center text-lg">
                             <span>Tổng tiền đơn hàng</span>
-                            <strong v-if="route.query.prd">{{ couponData?.discountValue ? formatPrice(couponData.finalPrice) : formatPrice(totalComputed) }}đ (-{{ couponData?.couponValue }}%)</strong>
-                            <strong v-else>{{ formatPrice(couponData?.discountValue ? couponData.finalPrice : itemCart.totalPrice) }}đ (-{{ couponData?.couponValue }}%)</strong>
+                            <div class="flex gap-2">
+                                <strong v-if="route.query.prd">{{ couponData?.discountValue ? formatPrice(couponData.finalPrice) : formatPrice(totalComputed) }}đ</strong>
+                                <strong v-else>{{ formatPrice(couponData?.discountValue ? couponData.finalPrice : itemCart.totalPrice) }}đ </strong> <span v-if="couponData?.couponValue">(-{{ couponData?.couponValue }}%)</span>
+                            </div>
+                            <!-- <span v-if="couponData?.couponValue">(-{{ couponData?.couponValue }}%)</span> -->
                         </div>
                         <div class="flex justify-between items-center">
                             <Button @click="router.push(`/`)" label="Quay lại" text></Button>

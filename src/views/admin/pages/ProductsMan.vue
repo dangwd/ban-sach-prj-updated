@@ -75,6 +75,8 @@ const openNew = async (data) => {
         } catch (error) {
             console.log(error);
         }
+    } else {
+        productDetail.value = {};
     }
     submitted.value = false;
     prodDialog.value = true;

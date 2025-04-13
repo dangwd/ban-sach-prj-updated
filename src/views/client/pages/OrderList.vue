@@ -87,7 +87,7 @@
                     </div>
                 </TabPanel>
                 <TabPanel value="1">
-                    <DataTable :value="Orders" show-gridlines paginator @page="onPageChange($event)" :rows="paginator.rows" :page="paginator.page" :total-records="paginator.total" lazy>
+                    <DataTable :value="Orders.filter((el) => el.status != 'cancelled')" show-gridlines paginator @page="onPageChange($event)" :rows="paginator.rows" :page="paginator.page" :total-records="paginator.total" lazy>
                         <Column header="#">
                             <template #body="{ index }">
                                 {{ index + 1 }}
@@ -132,7 +132,7 @@
                             <template #body="{ data }">
                                 <div class="flex gap-2">
                                     <DetailOrder :client="true" :data="data"></DetailOrder>
-                                    <Button icon="pi pi-trash" text></Button>
+                                    <Button @click="removeOrderDlg(data)" icon="pi pi-trash" text></Button>
                                 </div>
                             </template>
                         </Column>
@@ -195,6 +195,16 @@
                 </div>
             </template>
         </Dialog>
+
+        <Dialog v-model:visible="cancelOrderModal" modal header="Xác nhận hủy" :style="{ width: '50rem' }">
+            Xác nhận hủy đơn hàng ?
+            <template #footer>
+                <div class="flex justify-end gap-2">
+                    <Button type="button" label="Đóng" severity="secondary" @click="cancelOrderModal = false"></Button>
+                    <Button type="button" label="Xác nhận" @click="cancelOrder()"></Button>
+                </div>
+            </template>
+        </Dialog>
     </div>
 </template>
 <script setup>
@@ -213,6 +223,7 @@ const paginator = reactive({
     page: 0,
     total: 0
 });
+const cancelOrderModal = ref(false);
 onMounted(() => {
     fetchProvince();
     fetchAllOrder();
@@ -225,6 +236,7 @@ const userDetail = ref({});
 const Province = ref([]);
 const Districts = ref([]);
 const Wards = ref([]);
+const orderData = ref(null);
 const StatusOpts = ref([
     {
         label: 'Đã thanh toán',
@@ -317,6 +329,22 @@ const UploadFileLocal = async (event, index) => {
     document.querySelectorAll('.click-file')[index].value = '';
     updateUser();
     //   ProfileUser.value.files = URL.createObjectURL(file);
+};
+const removeOrderDlg = (data) => {
+    orderData.value = data;
+    cancelOrderModal.value = true;
+};
+const cancelOrder = async () => {
+    try {
+        const res = await API.create(`order/${orderData.value._id}/cancel`);
+        if (res.data) {
+            fetchAllOrder();
+            proxy.$notify('S', 'Hủy thành công!', toast);
+            cancelOrderModal.value = false;
+        }
+    } catch (error) {
+        console.log(error);
+    }
 };
 </script>
 <style></style>

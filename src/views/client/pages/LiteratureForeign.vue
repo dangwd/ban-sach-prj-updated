@@ -34,14 +34,12 @@ onMounted(() => {
     fetchBrand();
 });
 
-const fetchAllProducts = async (query = '') => {
-    let url = `products?skip=${paginator.page}&limit=${paginator.rows}`;
-    if (query) {
-        url += `${query}`;
-    }
+const fetchAllProducts = async () => {
+    let url = `product/name/Văn học Nước Ngoài?skip=${paginator.page}&limit=${paginator.rows}`;
+
     try {
         const res = await API.get(url);
-        Products.value = res.data.metadata.result;
+        Products.value = res.data.metadata;
         paginator.total = res.data.metadata.total;
     } catch (error) {
         console.log(error);
