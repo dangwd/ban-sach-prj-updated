@@ -1,6 +1,7 @@
 <script setup>
+import API from '@/api/api-main';
+import { formatPrice } from '@/helper/formatPrice';
 import { useLayout } from '@/layout/composables/layout';
-import { ProductService } from '@/service/ProductService';
 import { onMounted, ref, watch } from 'vue';
 
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
@@ -8,14 +9,15 @@ const { getPrimary, getSurface, isDarkTheme } = useLayout();
 const products = ref(null);
 const chartData = ref(null);
 const chartOptions = ref(null);
-
+const Dashboard = ref();
 const items = ref([
     { label: 'Add New', icon: 'pi pi-fw pi-plus' },
     { label: 'Remove', icon: 'pi pi-fw pi-trash' }
 ]);
 
 onMounted(() => {
-    ProductService.getProductsSmall().then((data) => (products.value = data));
+    fetchAllProducts();
+    fetchDashboard();
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();
 });
@@ -89,11 +91,20 @@ function setChartOptions() {
         }
     };
 }
-
-const formatCurrency = (value) => {
-    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const fetchDashboard = async () => {
+    try {
+        const res = await API.get(`dashboard`);
+        Dashboard.value = res.data.metadata;
+    } catch (error) {}
 };
-
+const fetchAllProducts = async () => {
+    try {
+        const res = await API.get(`products`);
+        products.value = res.data.metadata.result;
+    } catch (error) {
+        console.log(error);
+    }
+};
 watch([getPrimary, getSurface, isDarkTheme], () => {
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();
@@ -106,8 +117,8 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             <div class="card mb-0">
                 <div class="flex justify-between mb-4">
                     <div>
-                        <span class="block text-muted-color font-medium mb-4">Orders</span>
-                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">152</div>
+                        <span class="block text-muted-color font-medium mb-4">Đơn hàng</span>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ Dashboard.orderCount }}</div>
                     </div>
                     <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                         <i class="pi pi-shopping-cart text-blue-500 !text-xl"></i>
@@ -121,8 +132,8 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             <div class="card mb-0">
                 <div class="flex justify-between mb-4">
                     <div>
-                        <span class="block text-muted-color font-medium mb-4">Revenue</span>
-                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">$2.100</div>
+                        <span class="block text-muted-color font-medium mb-4">Doanh thu</span>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ formatPrice(Dashboard.totalPriceOfOrder) }}đ</div>
                     </div>
                     <div class="flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                         <i class="pi pi-dollar text-orange-500 !text-xl"></i>
@@ -136,8 +147,8 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             <div class="card mb-0">
                 <div class="flex justify-between mb-4">
                     <div>
-                        <span class="block text-muted-color font-medium mb-4">Customers</span>
-                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">28441</div>
+                        <span class="block text-muted-color font-medium mb-4">Sản phẩm</span>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ Dashboard.productCount }}</div>
                     </div>
                     <div class="flex items-center justify-center bg-cyan-100 dark:bg-cyan-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                         <i class="pi pi-users text-cyan-500 !text-xl"></i>
@@ -151,7 +162,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             <div class="card mb-0">
                 <div class="flex justify-between mb-4">
                     <div>
-                        <span class="block text-muted-color font-medium mb-4">Comments</span>
+                        <span class="block text-muted-color font-medium mb-4">Coupon</span>
                         <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">152 Unread</div>
                     </div>
                     <div class="flex items-center justify-center bg-purple-100 dark:bg-purple-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
@@ -165,18 +176,16 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
 
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <div class="font-semibold text-xl mb-4">Recent Sales</div>
+                <div class="font-semibold text-xl mb-4">Sản phẩm</div>
                 <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
-                    <Column style="width: 15%" header="Image">
+                    <Column style="width: 15%" header="Ảnh">
                         <template #body="slotProps">
-                            <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" width="50" class="shadow" />
+                            <img :src="slotProps.data?.images[0]" :alt="slotProps.data.image" width="50" class="shadow" />
                         </template>
                     </Column>
-                    <Column field="name" header="Name" :sortable="true" style="width: 35%"></Column>
-                    <Column field="price" header="Price" :sortable="true" style="width: 35%">
-                        <template #body="slotProps">
-                            {{ formatCurrency(slotProps.data.price) }}
-                        </template>
+                    <Column field="productName" header="Tên sản phẩm" :sortable="true" style="width: 35%"></Column>
+                    <Column field="price" header="Giá" :sortable="true" style="width: 35%">
+                        <template #body="slotProps"> {{ formatPrice(slotProps.data.price) }}đ </template>
                     </Column>
                     <Column style="width: 15%" header="View">
                         <template #body>
@@ -187,7 +196,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             </div>
             <div class="card">
                 <div class="flex justify-between items-center mb-6">
-                    <div class="font-semibold text-xl">Best Selling Products</div>
+                    <div class="font-semibold text-xl">Sản phẩm bán chạy</div>
                     <div>
                         <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu2.toggle($event)"></Button>
                         <Menu ref="menu2" :popup="true" :model="items" class="!min-w-40"></Menu>
@@ -271,7 +280,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
         </div>
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
-                <div class="font-semibold text-xl mb-4">Revenue Stream</div>
+                <div class="font-semibold text-xl mb-4">Thống kê</div>
                 <Chart type="bar" :data="chartData" :options="chartOptions" class="h-80" />
             </div>
             <div class="card">
