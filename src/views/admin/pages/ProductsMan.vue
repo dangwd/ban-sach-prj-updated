@@ -52,7 +52,7 @@ const paginator = reactive({
 const fetchAllProducts = async (query = '') => {
     let url = `products?skip=${paginator.page}&limit=${paginator.rows}`;
     if (query) {
-        url += `&filter=${query}`;
+        url += `&${query}`;
     }
     if (keySearch.value) {
         url += `&search=${keySearch.value}`;
