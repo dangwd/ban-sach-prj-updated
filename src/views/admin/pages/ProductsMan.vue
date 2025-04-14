@@ -343,10 +343,13 @@ const removeImages = (file) => {
                                 <label class="block font-bold mb-3">Giá tiền</label>
                                 <InputNumber v-model="productDetail.price" required="true" autofocus :invalid="submitted && !productDetail.price" fluid />
                             </div>
+                            <div>
+                                <label class="block font-bold mb-3">Giảm giá</label>
+                                <InputNumber v-model="productDetail.discount" :min="0" :max="100" suffix="%" required="true" autofocus fluid />
+                            </div>
                             <div class="flex gap-2 justify-between items-center">
                                 <div class="w-full">
                                     <label class="block font-bold mb-3">Thể loại</label>
-                                    <!-- <InputText v-model="productDetail.genre" required="true" autofocus :invalid="submitted && !productDetail.genre" fluid /> -->
                                     <Select v-model="productDetail.genre" :options="GenresOpt" :placeholder="productDetail?.genre?.genreName" optionLabel="genreName" class="w-full" optionValue="_id"></Select>
                                 </div>
                                 <div class="w-full">
