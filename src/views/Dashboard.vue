@@ -118,7 +118,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Đơn hàng</span>
-                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ Dashboard.orderCount }}</div>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ Dashboard?.orderCount }}</div>
                     </div>
                     <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                         <i class="pi pi-shopping-cart text-blue-500 !text-xl"></i>
@@ -133,7 +133,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Doanh thu</span>
-                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ formatPrice(Dashboard.totalPriceOfOrder) }}đ</div>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ formatPrice(Dashboard?.totalPriceOfOrder) }}đ</div>
                     </div>
                     <div class="flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                         <i class="pi pi-dollar text-orange-500 !text-xl"></i>
